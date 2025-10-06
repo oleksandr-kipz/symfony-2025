@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Validator\Product;
+
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ProductValidator

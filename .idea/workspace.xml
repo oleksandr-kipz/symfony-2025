@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="038767e5-264b-4f01-ae00-871f9eb31878" name="Changes" comment="" />
+    <list default="true" id="038767e5-264b-4f01-ae00-871f9eb31878" name="Changes" comment="add entity">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/symfony-2025.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/symfony-2025.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Product/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Product/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProductRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/Product/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/Product/ProductService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Validator/Product/ProductValidator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Validator/Product/ProductValidator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings">
+  <component name="ComposerSettings" doNotAsk="true">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -17,7 +30,16 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="5d4e0c96-2ade-4a63-b76f-b9c545329328" name="Docker" port="9003" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/webroot/symfony-2025" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
@@ -70,6 +92,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
       <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
       <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
     </include_path>
   </component>
   <component name="ProjectId" id="32GpPATjpiGaHGD7XYWfGygEug5" />
@@ -82,8 +106,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/var/www/webroot/coinmoneyhub",
+    "last_opened_file_path": "/var/www/webroot/symfony-2025",
     "php.override.implement.member.chooser.php.doc": "NONE",
+    "settings.editor.selected.configurable": "settings.php.debug.servers",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -105,6 +130,7 @@
       <updated>1757056736762</updated>
       <workItem from="1757056737931" duration="3777000" />
       <workItem from="1758360113678" duration="6894000" />
+      <workItem from="1759566912162" duration="9198000" />
     </task>
     <servers />
   </component>

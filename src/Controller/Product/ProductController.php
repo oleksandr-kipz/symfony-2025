@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Product;
 
 use App\Entity\Product;
+use App\Service\Product\ProductService;
+use App\Service\RequestCheckerService;
 use Doctrine\ORM\EntityManagerInterface;
-use ProductService;
-use ProductValidator;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,33 +16,49 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
 
+    private const CREATE_PRODUCT_DATA = [
+        "name",
+        "description",
+        "price"
+    ];
+
     /**
      * @param EntityManagerInterface $entityManager
      * @param ProductService $productService
-     * @param ProductValidator $productValidator
+     * @param RequestCheckerService $requestCheckerService
      */
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ProductService         $productService,
-        private ProductValidator       $productValidator
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ProductService         $productService,
+        private readonly RequestCheckerService  $requestCheckerService
     ) {}
 
     #[Route('/products', name: 'app_get_products', methods: ['GET'])]
-    public function getProducts(): JsonResponse
+    public function getProducts(Request $request): JsonResponse
     {
-        $products = $this->entityManager->getRepository(Product::class)->findAll();
+        $queryParams = $request->query->all();
+
+        $itemsPerPage = $queryParams['itemsPerPage'] ?? 5;
+        $page = $queryParams['page'] ?? 1;
+
+        $products = $this->entityManager->getRepository(Product::class)->getProducts($queryParams, $itemsPerPage, $page);
 
         return $this->json($products);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/products', name: 'app_post_products', methods: ['POST'])]
     public function createProduct(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
 
-        $this->productValidator->validate($requestData);
+        $this->requestCheckerService->check($requestData, self::CREATE_PRODUCT_DATA);
 
         $product = $this->productService->createProduct($requestData);
+
+        $this->requestCheckerService->validateRequestDataByConstraints($product);
 
         $this->entityManager->flush();
 
