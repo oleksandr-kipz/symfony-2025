@@ -5,17 +5,29 @@ namespace App\Controller;
 use App\Entity\Dishes;
 use App\Entity\Menu;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/api')]
 final class TestController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager) {}
-
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param Security $security
+     * @param JWTTokenManagerInterface $tokenManager
+     */
+    public function __construct(
+        private readonly EntityManagerInterface   $entityManager,
+        private readonly Security                 $security,
+        private readonly JWTTokenManagerInterface $tokenManager
+    ) {}
 
     #[Route('/test', name: 'app_test', methods: ['POST'])]
     public function index(Request $request): JsonResponse
@@ -70,4 +82,15 @@ final class TestController extends AbstractController
         ]);
     }
 
+    #[Route('/test3', name: 'app_test3', methods: ['GET'])]
+    public function testAuth(): JsonResponse
+    {
+        $user = $this->security->getUser();
+
+        if (!in_array("ROLE_USER", $user->getRoles())) {
+            throw new AccessDeniedHttpException("Access denied");
+        }
+
+        return $this->json(['email' => $this->security->getUser()->getUserIdentifier()]);
+    }
 }

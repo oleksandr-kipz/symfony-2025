@@ -31,6 +31,12 @@ class Product implements JsonSerializable
     #[Assert\Type('numeric')]
     private ?string $price = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: [
+        "persist",
+        "remove"
+    ], inversedBy: "products")]
+    private User $user;
+
     /**
      * @return int|null
      */
@@ -112,6 +118,25 @@ class Product implements JsonSerializable
             'description' => $this->getDescription(),
             'price'       => $this->getPrice()
         ];
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Controller\Product;
 
 use App\Entity\Product;
+use App\Entity\User;
 use App\Service\Product\ProductService;
 use App\Service\RequestCheckerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route('/api')]
 final class ProductController extends AbstractController
 {
 
@@ -50,6 +53,7 @@ final class ProductController extends AbstractController
      * @throws Exception
      */
     #[Route('/products', name: 'app_post_products', methods: ['POST'])]
+    #[IsGranted("ROLE_USER")]
     public function createProduct(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
@@ -57,6 +61,11 @@ final class ProductController extends AbstractController
         $this->requestCheckerService->check($requestData, self::CREATE_PRODUCT_DATA);
 
         $product = $this->productService->createProduct($requestData);
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $product->setUser($user);
 
         $this->requestCheckerService->validateRequestDataByConstraints($product);
 
@@ -75,6 +84,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/products/{id}', name: 'app_delete_products_item', methods: ['DELETE'])]
+    #[IsGranted("ROLE_USER")]
     public function deleteProduct(string $id): JsonResponse
     {
         /** @var Product $product */
@@ -91,6 +101,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/products/{id}', name: 'app_patch_products_item', methods: ['PATCH'])]
+    #[IsGranted("ROLE_USER")]
     public function updateProduct(string $id, Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
