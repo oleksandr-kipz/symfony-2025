@@ -2,33 +2,84 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\ArrayShape;
-use JsonSerializable;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: ProductRepository::class)]
-class Product implements JsonSerializable
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['get:item:products']],
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['get:collection:products']],
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['get:item:products']],
+            denormalizationContext: ['groups' => ['post:collection:products']],
+            security: "is_granted('" . User::ROLE_ADMIN . "')"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['get:item:products']],
+            denormalizationContext: ['groups' => ['patch:item:products']]
+        ),
+        new Delete(),
+    ],
+    security: "is_granted('" . User::ROLE_ADMIN . "') or is_granted('" . User::ROLE_USER . "')"
+)]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
+#[ApiFilter(RangeFilter::class, properties: ['createdAt'])]
+#[ORM\Entity]
+class Product
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups([
+        'get:item:products',
+        'get:collection:products'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Groups([
+        'get:item:products',
+        'get:collection:products',
+        'post:collection:products',
+        'patch:item:products'
+    ])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups([
+        'get:item:products',
+        'post:collection:products',
+        'patch:item:products'
+    ])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 6)]
     #[Assert\NotBlank]
     #[Assert\Type('numeric')]
+    #[Groups([
+        'get:item:products',
+        'get:collection:products',
+        'post:collection:products',
+        'patch:item:products'
+    ])]
     private ?string $price = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: [
@@ -36,6 +87,21 @@ class Product implements JsonSerializable
         "remove"
     ], inversedBy: "products")]
     private User $user;
+
+    #[ORM\Column(type: "integer")]
+    #[Groups([
+        'get:item:products',
+        'get:collection:products'
+    ])]
+    private int $createdAt;
+
+    /**
+     * Product constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = time();
+    }
 
     /**
      * @return int|null
@@ -103,24 +169,6 @@ class Product implements JsonSerializable
     }
 
     /**
-     * @return mixed
-     */
-    #[ArrayShape([
-        'id'          => "int|null",
-        'name'        => "null|string",
-        'description' => "null|string",
-        'price'       => "null|string"
-    ])] public function jsonSerialize(): mixed
-    {
-        return [
-            'id'          => $this->getId(),
-            'name'        => $this->getName(),
-            'description' => $this->getDescription(),
-            'price'       => $this->getPrice()
-        ];
-    }
-
-    /**
      * @return User
      */
     public function getUser(): User
@@ -135,6 +183,25 @@ class Product implements JsonSerializable
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreatedAt(): int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param int $createdAt
+     * @return Product
+     */
+    public function setCreatedAt(int $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
