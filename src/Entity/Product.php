@@ -82,11 +82,16 @@ class Product
     ])]
     private ?string $price = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: [
+    #[Groups([
+        'get:item:products',
+        'get:collection:products',
+        'post:collection:products'
+    ])]
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: [
         "persist",
         "remove"
     ], inversedBy: "products")]
-    private User $user;
+    private Category $category;
 
     #[ORM\Column(type: "integer")]
     #[Groups([
@@ -169,20 +174,20 @@ class Product
     }
 
     /**
-     * @return User
+     * @return Category
      */
-    public function getUser(): User
+    public function getCategory(): Category
     {
-        return $this->user;
+        return $this->category;
     }
 
     /**
-     * @param User $user
+     * @param Category $category
      * @return $this
      */
-    public function setUser(User $user): self
+    public function setCategory(Category $category): self
     {
-        $this->user = $user;
+        $this->category = $category;
 
         return $this;
     }
