@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Action\UpdateProductAction;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -30,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "is_granted('" . User::ROLE_ADMIN . "')"
         ),
         new Patch(
+//            controller: UpdateProductAction::class,
             normalizationContext: ['groups' => ['get:item:products']],
             denormalizationContext: ['groups' => ['patch:item:products']]
         ),
@@ -40,6 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 #[ApiFilter(RangeFilter::class, properties: ['createdAt'])]
 #[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
 
@@ -100,12 +103,15 @@ class Product
     ])]
     private int $createdAt;
 
+    #[ORM\ManyToOne(targetEntity: User::class,inversedBy: "products")]
+    private User $user;
+
     /**
      * Product constructor.
      */
     public function __construct()
     {
-        $this->createdAt = time();
+        //        $this->createdAt = time();
     }
 
     /**
@@ -209,6 +215,31 @@ class Product
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    #[ORM\PrePersist]
+    public function initCreatedAt(): void
+    {
+        $this->createdAt = time();
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 }

@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Dishes;
 use App\Entity\Menu;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -87,10 +87,12 @@ final class TestController extends AbstractController
     {
         $user = $this->security->getUser();
 
-        if (!in_array("ROLE_USER", $user->getRoles())) {
-            throw new AccessDeniedHttpException("Access denied");
-        }
-
-        return $this->json(['email' => $this->security->getUser()->getUserIdentifier()]);
+        //        $user = $this->security->getUser();
+        //
+        //        if (!in_array("ROLE_USER", $user->getRoles())) {
+        //            throw new AccessDeniedHttpException("Access denied");
+        //        }
+        //
+                return $this->json([]);
     }
 }

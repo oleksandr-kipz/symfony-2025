@@ -20,9 +20,18 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Action\:
+        resource: '../src/Action'
+        tags: ['controller.service_arguments']
+
     App\EventListener\RuntimeConstraintExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Extension\AbstractCurrentUserExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -30,10 +30,10 @@
         "symfony/serializer": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/validator": "6.4.*",
-        "symfony/yaml": "6.4.*"
+        "symfony/yaml": "6.4.*",
+        "symfony/maker-bundle": "^1.64"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.64"
     },
     "config": {
         "allow-plugins": {
